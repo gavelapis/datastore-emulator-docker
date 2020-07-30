@@ -15,7 +15,7 @@ ENV DATASTORE_LISTEN_ADDRESS=0.0.0.0:8081
 # Volume to persist Datastore data
 VOLUME /opt/data
 
-COPY scripts/start-datastore.sh .
+COPY start-datastore.sh .
 
 EXPOSE 8081
 

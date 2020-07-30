@@ -50,9 +50,7 @@ version: '3'
 
 services:
   datastore:
-    build:
-      context: .
-      dockerfile: Dockerfile.datastore-emulator
+    image: gavelapis/datastore-emulator-docker
     ports:
       - '8081:8081'
   test:
@@ -65,7 +63,7 @@ services:
       # setting these environment variables will force google cloud
       # datastore library to connect to local datastore emulator
       - DATASTORE_PROJECT_ID=project-test
-      - DATASTORE_EMULATOR_HOST=datastore:8081
+      - DATASTORE_EMULATOR_HOST=host.docker.internal:8081
 ```
 
 ### Persistence
