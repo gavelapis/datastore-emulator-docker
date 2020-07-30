@@ -1,5 +1,11 @@
 # Google Cloud Datastore Emulator
 
+[Original repository](https://github.com/SingularitiesCR/datastore-emulator-docker) was awesome and
+provided all the hard setup work. However, it was no longer maintained and the
+Google Cloud datastore component fell behind by over 100 versions. Most of this repository is
+the same except the version of the datstore emulator. Thanks
+[@SingularitiesCR](https://github.com/SingularitiesCR) for putting in the ground work.
+
 A [Google Cloud Datastore Emulator](https://cloud.google.com/datastore/docs/tools/datastore-emulator/) container image. The image is meant to be used for creating an standalone emulator for testing.
 
 ## Environment
@@ -40,16 +46,26 @@ start-datastore --no-store-on-disk --consistency=1.0
 The easiest way to create an emulator with this image is by using [Docker Compose](https://docs.docker.com/compose). The following snippet can be used as a `docker-compose.yml` for a datastore emulator:
 
 ```YAML
-version: "2"
+version: '3'
 
 services:
   datastore:
-    image: singularities/datastore-emulator
-    environment:
-      - DATASTORE_PROJECT_ID=project-test
-      - DATASTORE_LISTEN_ADDRESS=0.0.0.0:8081
+    build:
+      context: .
+      dockerfile: Dockerfile.datastore-emulator
     ports:
-      - "8081:8081"
+      - '8081:8081'
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    depends_on:
+      - datastore
+    environment:
+      # setting these environment variables will force google cloud
+      # datastore library to connect to local datastore emulator
+      - DATASTORE_PROJECT_ID=project-test
+      - DATASTORE_EMULATOR_HOST=datastore:8081
 ```
 
 ### Persistence
